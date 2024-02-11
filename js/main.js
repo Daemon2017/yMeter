@@ -1,5 +1,5 @@
 function subtract() {
-    document.getElementById("resultsID").value = "";
+    document.getElementById("resultsID").innerHTML = "";
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function () {
