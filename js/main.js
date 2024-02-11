@@ -18,7 +18,7 @@ function subtract() {
     }
     xhr.responseType = "arraybuffer";
 
-    xhr.open("POST", "http://localhost:8080/measure");
+    xhr.open("POST", "https://bbagglj1i928n0qhcggp.containers.yandexcloud.net/measure");
     xhr.setRequestHeader("Content-Type", "text/plain");
 
     var body = document.getElementById("referenceID").value + "\n" + document.getElementById("samplesID").value;
