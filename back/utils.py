@@ -32,6 +32,6 @@ def get_extended_df(df):
     subtracted_df = (df - df.values[0]).abs()
     df['Steps'] = subtracted_df.sum(axis=1)
     df['Diff markers'] = (subtracted_df != 0).sum(axis=1)
-    df = df.drop(columns=full_ftdna_strs_order)
+    df = df.drop(columns=full_ftdna_strs_order, errors='ignore')
     df = df.drop(df.index[0])
     return df
