@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="#" />
+
+    <title>yMeter</title>
+
+    <script src="js/main.js"></script>
+
+    <script defer src="js/csv.min.js"></script>
+
+    <style>
+        .column {
+            float: left;
+            width: 50%;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <form style="width: 66%">
+        <div class="center">
+            <h2>yMeter</h2>
+        </div>
+        <div class="row">
+            <div class="column">
+                <a href="https://github.com/Daemon2017/yMeter">yMeter</a> это инструмент,
+                позволяющий узнать количество шагов и количество отличающихся маркеров между эталоном и образцами.
+            </div>
+            <div class="column">
+                <a href="https://github.com/Daemon2017/yMeter">yMeter</a> is a tool,
+                that allows to find out the number of steps and the number of different markers between the reference and samples..
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <label for="referenceID">Эталон: </label>
+            </div>
+            <div class="column">
+                <label for="referenceID">Reference: </label>
+            </div>
+        </div>
+        <div>
+            <textarea id="referenceID" rows="3" wrap="off" style="width: 100%"></textarea>
+        </div>
+        <div class="row">
+            <div class="column">
+                <label for="samplesID">Образцы: </label>
+            </div>
+            <div class="column">
+                <label for="samplesID">Samples: </label>
+            </div>
+        </div>
+        <div>
+            <textarea id="samplesID" rows="12" wrap="off" style="width: 100%"></textarea>
+        </div>
+        <div class="row">
+            <div class="column">
+                Предупреждение: подготовка ответа может занять до 30 секунд.
+            </div>
+            <div class="column">
+                Warning: it may take up to 30 seconds to prepare a response.
+            </div>
+        </div>
+        <div>
+            <input type="button" onClick="subtract()" value="Measure" style="width: 100%" />
+        </div>
+        <div class="row">
+            <div class="column">
+                <label for="resultsID">Результаты: </label>
+            </div>
+            <div class="column">
+                <label for="resultsID">Results: </label>
+            </div>
+        </div>
+        <div>
+            <table id="resultsID"></table>
+        </div>
+    </form>
+</body>
+
+</html>
