@@ -42,7 +42,7 @@ def get_extended_df(df, headers):
     df['lambda'] = df['lambda_obs'] * (1 + numpy.exp(df['lambda_obs'])) / 2
     amr = headers[AVERAGE_MUTATION_RATE]
     ypg = headers[YEARS_PER_GENERATION]
-    df['TMRCA'] = round(df['lambda'] / 2 / float(amr) * int(ypg)).astype(int)
+    df['TMRCA'] = round(df['lambda'] / 2 / float(amr) * float(ypg)).astype(int)
     df = df.drop(columns=['lambda_obs', 'lambda'], errors='ignore')
     df = df.drop(df.index[0])
     return df

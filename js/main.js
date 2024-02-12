@@ -1,4 +1,4 @@
-function subtract() {
+function measure() {
     document.getElementById("resultsID").innerHTML = "";
     var xhr = new XMLHttpRequest();
 
