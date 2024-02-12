@@ -30,6 +30,7 @@ full_ftdna_strs_order = [
 
 AVERAGE_MUTATION_RATE = 'amr'
 YEARS_PER_GENERATION = 'ypg'
+REMOVE_PALINDROMES = 'rp'
 
 
 def get_data(data):
@@ -66,6 +67,16 @@ def get_prepared_df(data):
 
 
 def get_extended_df(df, headers):
+    if headers[REMOVE_PALINDROMES] == "True":
+        df = df.drop(
+            columns=['DYS385a', 'DYS385b', 'DYS459a', 'DYS459b', 'YCAIIa', 'YCAIIb', 'CDYa', 'CDYb', 'DYF395S1a',
+                     'DYF395S1b', 'DYS413a', 'DYS413b'],
+            errors='ignore'
+        )
+        df = df.drop(
+            columns=['DYS464a', 'DYS464b', 'DYS464c', 'DYS464d'],
+            errors='ignore'
+        )
     subtracted_df = (df - df.values[0]).abs()
     str_count = len(df.columns)
     df['Different markers'] = (subtracted_df != 0).sum(axis=1)
