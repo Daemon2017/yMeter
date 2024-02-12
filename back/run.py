@@ -13,7 +13,7 @@ cors = CORS(app)
 @app.route('/measure', methods=['POST'])
 def measure():
     df = utils.get_prepared_df(request)
-    df = utils.get_extended_df(df)
+    df = utils.get_extended_df(df, request.headers)
     df = df.sort_values(by=['Steps'])
     return Response(df.to_csv(sep=',', index=True, header=True), mimetype=TEXT_CSV)
 

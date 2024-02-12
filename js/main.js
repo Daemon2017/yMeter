@@ -19,6 +19,8 @@ function subtract() {
     xhr.responseType = "arraybuffer";
 
     xhr.open("POST", "https://bbagglj1i928n0qhcggp.containers.yandexcloud.net/measure");
+    xhr.setRequestHeader("ypg", document.getElementById("ypgID").value);
+    xhr.setRequestHeader("amr", document.getElementById("amrID").value);
     xhr.setRequestHeader("Content-Type", "text/plain");
 
     var body = document.getElementById("referenceID").value + "\n" + document.getElementById("samplesID").value;

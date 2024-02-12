@@ -1,5 +1,6 @@
 from io import StringIO
 
+import numpy
 import pandas as pd
 
 full_ftdna_strs_order = [
@@ -15,6 +16,9 @@ full_ftdna_strs_order = [
     'DYS504', 'DYS513', 'DYS561', 'DYS552', 'DYS726', 'DYS635', 'DYS587', 'DYS643', 'DYS497', 'DYS510', 'DYS434',
     'DYS461', 'DYS435']
 
+AVERAGE_MUTATION_RATE = 'amr'
+YEARS_PER_GENERATION = 'ypg'
+
 
 def get_prepared_df(rq):
     data = rq.data
@@ -28,10 +32,17 @@ def get_prepared_df(rq):
     return df
 
 
-def get_extended_df(df):
+def get_extended_df(df, headers):
     subtracted_df = (df - df.values[0]).abs()
+    str_count = len(df.columns)
+    df['Different markers'] = (subtracted_df != 0).sum(axis=1)
     df['Steps'] = subtracted_df.sum(axis=1)
-    df['Diff markers'] = (subtracted_df != 0).sum(axis=1)
     df = df.drop(columns=full_ftdna_strs_order, errors='ignore')
+    df['lambda_obs'] = df['Steps'] / str_count
+    df['lambda'] = df['lambda_obs'] * (1 + numpy.exp(df['lambda_obs'])) / 2
+    amr = headers[AVERAGE_MUTATION_RATE]
+    ypg = headers[YEARS_PER_GENERATION]
+    df['TMRCA'] = round(df['lambda'] / 2 / float(amr) * int(ypg)).astype(int)
+    df = df.drop(columns=['lambda_obs', 'lambda'], errors='ignore')
     df = df.drop(df.index[0])
     return df
