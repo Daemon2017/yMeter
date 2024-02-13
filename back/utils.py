@@ -33,36 +33,28 @@ YEARS_PER_GENERATION = 'ypg'
 REMOVE_PALINDROMES = 'rp'
 
 
-def get_data(data):
-    rows = data \
+def get_prepared_df(data):
+    csv = data \
         .decode('utf-8') \
         .replace(' ', ',') \
-        .replace('\t', ',') \
-        .splitlines()
-
-    for i, row in enumerate(rows):
-        columns = row.split(',')
-        values = []
-        for j, column in enumerate(columns):
-            column_values = column.split('-')
-            if j > 0:
-                if ftdna_strs_order[j - 1] in ['DYS385', 'DYS459', 'YCAII', 'CDY', 'DYF395S1', 'DYS413']:
-                    values.extend([column_values[0], column_values[-1]])
-                elif ftdna_strs_order[j - 1] in ['DYS464']:
-                    values.extend([column_values[0], column_values[1], column_values[-2], column_values[-1]])
-                else:
-                    values.extend([column_values[-1]])
-            else:
-                values.extend([column_values[-1]])
-        rows[i] = ','.join(values)
-    data = '\n'.join(rows)
-    return data
-
-
-def get_prepared_df(data):
-    df = pd.read_csv(StringIO(data), sep=',', header=None, names=full_ftdna_strs_order, index_col=0)
+        .replace('\t', ',')
+    df = pd.read_csv(StringIO(csv), sep=',', header=None, names=ftdna_strs_order, index_col=0, dtype=str)
+    for column in df:
+        if column in ['DYS385', 'DYS459', 'YCAII', 'CDY', 'DYF395S1', 'DYS413']:
+            df[column + 'a'] = df[column].str.split('-').str[0]
+            df[column + 'b'] = df[column].str.split('-').str[-1]
+            df = df.drop(columns=column, errors='ignore')
+        elif column in ['DYS464']:
+            df[column + 'a'] = df[column].str.split('-').str[0]
+            df[column + 'b'] = df[column].str.split('-').str[1]
+            df[column + 'c'] = df[column].str.split('-').str[-2]
+            df[column + 'd'] = df[column].str.split('-').str[-1]
+            df = df.drop(columns=column, errors='ignore')
+        else:
+            df[column] = df[column].str.split('-').str[-1]
     df = df.dropna(axis=1, how='all')
     df.index.name = 'Kit'
+    df = df.astype('int32')
     return df
 
 
