@@ -15,6 +15,9 @@ def measure():
     df = utils.get_prepared_df(request.data)
     df = utils.get_extended_df(df, request.headers)
     df = df.sort_values(by=['Steps'])
+    limit = int(request.headers['limit'])
+    if limit != 0:
+        df = df.iloc[:limit]
     return Response(df.to_csv(sep=',', index=True, header=True), mimetype=TEXT_CSV)
 
 
