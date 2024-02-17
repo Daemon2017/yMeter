@@ -42,6 +42,7 @@ def get_prepared_df(data):
     df = pd.read_csv(StringIO(csv), sep=',', header=None, names=ftdna_strs_order, index_col=0, dtype=str)
     notna_columns_of_etalon = df.columns[df.iloc[0].notna()].tolist()
     df = df[notna_columns_of_etalon]
+    df = df.dropna(axis=0, how='any')
     for column in df:
         if column in ['DYS385', 'DYS459', 'YCAII', 'CDY', 'DYF395S1', 'DYS413']:
             df[column + 'a'] = df[column].str.split('-').str[0]
