@@ -59,7 +59,9 @@ def get_prepared_df(data):
     df = df.dropna(axis=1, how='all')
     df.index.name = 'Kit'
     df = df.astype('int32')
-    df['DYS389'] = df['DYS389II'] - df['DYS389I']
+    if 'DYS389I' in df.columns \
+            and 'DYS389II' in df.columns:
+        df['DYS389'] = df['DYS389II'] - df['DYS389I']
     df = df.drop(columns=['DYS389I', 'DYS389II'], errors='ignore')
     return df
 
