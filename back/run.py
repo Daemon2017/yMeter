@@ -12,8 +12,19 @@ cors = CORS(app)
 
 @app.route('/measure', methods=['POST'])
 def measure():
-    df = utils.get_prepared_df(request.data)
-    df = utils.get_extended_df(df, request.headers)
+    df = utils.get_df(request.data)
+    df = utils.get_solved_na_df(df)
+    df = utils.get_solved_duplications_df(df)
+    df = df.dropna(axis=1, how='all')
+    df.index.name = 'Kit'
+    df = df.astype('int32')
+    df = utils.get_solved_composites_df(df)
+    df = utils.get_solved_palindromes_df(df, request.headers)
+    df = utils.get_solved_deletions_df(df)
+    str_count = len(df.columns)
+    df = utils.get_subtracted_df(df)
+    df = utils.get_tmrca_df(df, str_count, request.headers)
+    df = df.drop(df.index[0])
     df = df.sort_values(by=['Steps'])
     limit = int(request.headers['limit'])
     if limit != 0:

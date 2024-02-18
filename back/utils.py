@@ -1,7 +1,6 @@
 from io import StringIO
 
 import numpy
-import numpy as np
 import pandas as pd
 
 ftdna_strs_order = [
@@ -35,15 +34,23 @@ YEARS_PER_GENERATION = 'ypg'
 REMOVE_PALINDROMES = 'rp'
 
 
-def get_prepared_df(data):
+def get_df(data):
     csv = data \
         .decode('utf-8') \
         .replace(' ', ',') \
         .replace('\t', ',')
     df = pd.read_csv(StringIO(csv), sep=',', header=None, names=ftdna_strs_order, index_col=0, dtype=str)
-    notna_columns_of_etalon = df.columns[df.iloc[0].notna()].tolist()
-    df = df[notna_columns_of_etalon]
+    return df
+
+
+def get_solved_na_df(df):
+    notna_columns_of_reference = df.columns[df.iloc[0].notna()].tolist()
+    df = df[notna_columns_of_reference]
     df = df.dropna(axis=0, how='any')
+    return df
+
+
+def get_solved_duplications_df(df):
     for column in df:
         if column in ['DYS385', 'DYS459', 'YCAII', 'CDY', 'DYF395S1', 'DYS413']:
             df[column + 'a'] = df[column].str.split('-').str[0]
@@ -57,9 +64,10 @@ def get_prepared_df(data):
             df = df.drop(columns=column, errors='ignore')
         else:
             df[column] = df[column].str.split('-').str[-1]
-    df = df.dropna(axis=1, how='all')
-    df.index.name = 'Kit'
-    df = df.astype('int32')
+    return df
+
+
+def get_solved_composites_df(df):
     if 'DYS389I' in df.columns \
             and 'DYS389II' in df.columns:
         df['DYS389'] = df['DYS389II'] - df['DYS389I']
@@ -67,7 +75,7 @@ def get_prepared_df(data):
     return df
 
 
-def get_extended_df(df, headers):
+def get_solved_palindromes_df(df, headers):
     if headers[REMOVE_PALINDROMES] == "True":
         df = df.drop(
             columns=['DYS385a', 'DYS385b', 'DYS459a', 'DYS459b', 'YCAIIa', 'YCAIIb', 'CDYa', 'CDYb', 'DYF395S1a',
@@ -78,20 +86,30 @@ def get_extended_df(df, headers):
             columns=['DYS464a', 'DYS464b', 'DYS464c', 'DYS464d'],
             errors='ignore'
         )
+    return df
+
+
+def get_solved_deletions_df(df):
     reference_row = df.iloc[0]
     zero_columns = reference_row[reference_row == 0].index
     df.loc[:, zero_columns] = (df.loc[:, zero_columns] > 0).astype(int)
+    return df
+
+
+def get_subtracted_df(df):
     subtracted_df = (df - df.values[0]).abs()
-    str_count = len(df.columns)
     df['Different markers'] = (subtracted_df != 0).sum(axis=1)
     df['Steps'] = subtracted_df.sum(axis=1)
     df = df.drop(columns=full_ftdna_strs_order, errors='ignore')
     df = df.drop(columns='DYS389', errors='ignore')
+    return df
+
+
+def get_tmrca_df(df, str_count, headers):
     df['lambda_obs'] = df['Steps'] / str_count
     df['lambda'] = df['lambda_obs'] * (1 + numpy.exp(df['lambda_obs'])) / 2
     amr = headers[AVERAGE_MUTATION_RATE]
     ypg = headers[YEARS_PER_GENERATION]
     df['TMRCA'] = round(df['lambda'] / 2 / float(amr) * float(ypg)).astype(int)
     df = df.drop(columns=['lambda_obs', 'lambda'], errors='ignore')
-    df = df.drop(df.index[0])
     return df
