@@ -91,8 +91,8 @@ def get_solved_palindromes_df(df, headers):
 
 def get_solved_deletions_df(df):
     reference_row = df.iloc[0]
-    zero_columns = reference_row[reference_row == 0].index
-    df.loc[:, zero_columns] = (df.loc[:, zero_columns] > 0).astype(int)
+    reference_zero_columns = reference_row[reference_row == 0].index
+    df.loc[:, reference_zero_columns] = (df.loc[:, reference_zero_columns] > 0).astype(int)
     return df
 
 
