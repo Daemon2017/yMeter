@@ -1,6 +1,7 @@
 from io import StringIO
 
 import numpy
+import numpy as np
 import pandas as pd
 
 ftdna_strs_order = [
@@ -77,6 +78,9 @@ def get_extended_df(df, headers):
             columns=['DYS464a', 'DYS464b', 'DYS464c', 'DYS464d'],
             errors='ignore'
         )
+    reference_row = df.iloc[0]
+    zero_columns = reference_row[reference_row == 0].index
+    df.loc[:, zero_columns] = (df.loc[:, zero_columns] > 0).astype(int)
     subtracted_df = (df - df.values[0]).abs()
     str_count = len(df.columns)
     df['Different markers'] = (subtracted_df != 0).sum(axis=1)
