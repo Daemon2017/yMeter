@@ -90,6 +90,10 @@ def get_solved_palindromes_df(df, headers):
 
 
 def get_solved_deletions_df(df):
+    reference_df = df.iloc[:1]
+    samples_df = df.iloc[1:]
+    samples_df = samples_df.mask((reference_df.iloc[0] != 0) & (samples_df == 0), reference_df + 1, axis=1)
+    df = pd.concat([reference_df, samples_df])
     reference_row = df.iloc[0]
     reference_zero_columns = reference_row[reference_row == 0].index
     df.loc[:, reference_zero_columns] = (df.loc[:, reference_zero_columns] > 0).astype(int)
