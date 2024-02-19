@@ -52,18 +52,19 @@ def get_solved_na_df(df):
 
 def get_solved_duplications_df(df):
     for column in df:
+        column_splitted = df[column].str.split('-')
         if column in ['DYS385', 'DYS459', 'YCAII', 'CDY', 'DYF395S1', 'DYS413']:
-            df[column + 'a'] = df[column].str.split('-').str[0]
-            df[column + 'b'] = df[column].str.split('-').str[-1]
+            df[column + 'a'] = column_splitted.str[0]
+            df[column + 'b'] = column_splitted.str[-1]
             df = df.drop(columns=column, errors='ignore')
         elif column in ['DYS464']:
-            df[column + 'a'] = df[column].str.split('-').str[0]
-            df[column + 'b'] = df[column].str.split('-').str[1]
-            df[column + 'c'] = df[column].str.split('-').str[-2]
-            df[column + 'd'] = df[column].str.split('-').str[-1]
+            df[column + 'a'] = column_splitted.str[0]
+            df[column + 'b'] = column_splitted.str[1]
+            df[column + 'c'] = column_splitted.str[-2]
+            df[column + 'd'] = column_splitted.str[-1]
             df = df.drop(columns=column, errors='ignore')
         else:
-            df[column] = df[column].str.split('-').str[-1]
+            df[column] = column_splitted.str[-1]
     return df
 
 
