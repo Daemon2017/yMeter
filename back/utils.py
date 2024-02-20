@@ -40,7 +40,7 @@ def get_df(data):
         .decode('utf-8') \
         .replace(' ', ',') \
         .replace('\t', ',')
-    df = pd.read_csv(StringIO(csv), sep=',', header=None, names=ftdna_strs_order, index_col=0, dtype=str)
+    df = pd.read_csv(StringIO(csv), sep=',', header=None, names=ftdna_strs_order, index_col=0)
     return df
 
 
@@ -53,19 +53,20 @@ def get_solved_na_df(df):
 
 def get_solved_duplications_df(df):
     for column in df:
-        column_splitted = df[column].str.split('-')
-        if column in ['DYS385', 'DYS459', 'YCAII', 'CDY', 'DYF395S1', 'DYS413']:
-            df[column + 'a'] = column_splitted.str[0]
-            df[column + 'b'] = column_splitted.str[-1]
-            df = df.drop(columns=column, errors='ignore')
-        elif column in ['DYS464']:
-            df[column + 'a'] = column_splitted.str[0]
-            df[column + 'b'] = column_splitted.str[1]
-            df[column + 'c'] = column_splitted.str[-2]
-            df[column + 'd'] = column_splitted.str[-1]
-            df = df.drop(columns=column, errors='ignore')
-        else:
-            df[column] = column_splitted.str[-1]
+        if df[column].dtype == 'object':
+            column_splitted = df[column].str.split('-')
+            if column in ['DYS385', 'DYS459', 'YCAII', 'CDY', 'DYF395S1', 'DYS413']:
+                df[column + 'a'] = column_splitted.str[0].astype('int64')
+                df[column + 'b'] = column_splitted.str[-1].astype('int64')
+                df = df.drop(columns=column, errors='ignore')
+            elif column in ['DYS464']:
+                df[column + 'a'] = column_splitted.str[0].astype('int64')
+                df[column + 'b'] = column_splitted.str[1].astype('int64')
+                df[column + 'c'] = column_splitted.str[-2].astype('int64')
+                df[column + 'd'] = column_splitted.str[-1].astype('int64')
+                df = df.drop(columns=column, errors='ignore')
+            else:
+                df[column] = column_splitted.str[-1].astype('int64')
     return df
 
 
