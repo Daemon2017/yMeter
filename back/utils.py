@@ -99,7 +99,7 @@ def get_solved_deletions_df(df):
     df = pd.concat([reference_df, samples_df])
     reference_row = df.iloc[0]
     reference_zero_columns = reference_row[reference_row == 0].index
-    df.loc[:, reference_zero_columns] = (df.loc[:, reference_zero_columns] > 0).astype(int)
+    df.loc[:, reference_zero_columns] = (df.loc[:, reference_zero_columns] > 0).astype('int64')
     return df
 
 
@@ -116,6 +116,6 @@ def get_tmrca_df(df, str_count, headers):
     df['lambda'] = df['lambda_obs'] * (1 + numpy.exp(df['lambda_obs'])) / 2
     amr = headers[AVERAGE_MUTATION_RATE]
     ypg = headers[YEARS_PER_GENERATION]
-    df['TMRCA'] = round(df['lambda'] / 2 / float(amr) * float(ypg)).astype(int)
+    df['TMRCA'] = round(df['lambda'] / 2 / float(amr) * float(ypg)).astype('int64')
     df = df.drop(columns=['lambda_obs', 'lambda'], errors='ignore')
     return df
