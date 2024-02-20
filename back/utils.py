@@ -32,6 +32,7 @@ full_ftdna_strs_order = [
 AVERAGE_MUTATION_RATE = 'amr'
 YEARS_PER_GENERATION = 'ypg'
 REMOVE_PALINDROMES = 'rp'
+CORRECT_389 = 'corr389'
 
 
 def get_df(data):
@@ -68,11 +69,11 @@ def get_solved_duplications_df(df):
     return df
 
 
-def get_solved_composites_df(df):
-    if 'DYS389I' in df.columns \
-            and 'DYS389II' in df.columns:
-        df['DYS389'] = df['DYS389II'] - df['DYS389I']
-    df = df.drop(columns=['DYS389I', 'DYS389II'], errors='ignore')
+def get_solved_composites_df(df, headers):
+    if headers[CORRECT_389] == "True":
+        if 'DYS389I' in df.columns \
+                and 'DYS389II' in df.columns:
+            df['DYS389II'] = df['DYS389II'] - df['DYS389I']
     return df
 
 
@@ -106,7 +107,6 @@ def get_subtracted_df(df):
     df['Different markers'] = (subtracted_df != 0).sum(axis=1)
     df['Steps'] = subtracted_df.sum(axis=1)
     df = df.drop(columns=full_ftdna_strs_order, errors='ignore')
-    df = df.drop(columns='DYS389', errors='ignore')
     return df
 
 
