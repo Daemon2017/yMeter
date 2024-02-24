@@ -33,6 +33,7 @@ AVERAGE_MUTATION_RATE = 'amr'
 YEARS_PER_GENERATION = 'ypg'
 REMOVE_PALINDROMES = 'rp'
 CORRECT_389 = 'corr389'
+PROCESS_SAMPLES_WITH_NA = 'pswn'
 
 
 def get_df(data):
@@ -44,10 +45,16 @@ def get_df(data):
     return df
 
 
-def get_solved_na_df(df):
+def get_solved_na_df(df, headers):
     notna_columns_of_reference = df.columns[df.iloc[0].notna()].tolist()
     df = df[notna_columns_of_reference]
-    df = df.dropna(axis=0, how='any')
+    if headers[PROCESS_SAMPLES_WITH_NA] == "True":
+        reference_df = df.iloc[:1]
+        samples_df = df.iloc[1:]
+        samples_df = samples_df.mask(reference_df.iloc[0].notnull() & samples_df.isnull(), reference_df, axis=1)
+        df = pd.concat([reference_df, samples_df])
+    else:
+        df = df.dropna(axis=0, how='any')
     return df
 
 

@@ -23,6 +23,7 @@ function measure() {
     xhr.setRequestHeader("amr", document.getElementById("amrID").value);
     xhr.setRequestHeader("rp", document.getElementById("rpID").value);
     xhr.setRequestHeader("corr389", document.getElementById("corrID").value);
+    xhr.setRequestHeader("pswn", document.getElementById("pswnID").value);
     xhr.setRequestHeader("limit", document.getElementById("limitID").value);
     xhr.setRequestHeader("Content-Type", "text/plain");
 
