@@ -23,9 +23,8 @@ def measure():
     df = utils.get_solved_na_df_2(df, request.headers)
     df = df.astype('int32')
     df = utils.get_solved_deletions_df(df)
-    str_count = len(df.columns)
     df = utils.get_subtracted_df(df)
-    df = utils.get_tmrca_df(df, str_count, request.headers)
+    df = utils.get_tmrca_df(df, strs_count, request.headers)
     df = df.drop(df.index[0])
     df['Used markers'] = strs_count
     df = df.sort_values(by=['Used markers', 'Steps'], ascending=[False, True])
