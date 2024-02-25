@@ -13,21 +13,26 @@ cors = CORS(app)
 @app.route('/measure', methods=['POST'])
 def measure():
     df = utils.get_df(request.data)
-    df = utils.get_solved_na_df(df, request.headers)
+    df = utils.get_solved_na_df_1(df)
     df = utils.get_solved_duplications_df(df)
     df = df.dropna(axis=1, how='all')
     df.index.name = 'Kit'
     df = utils.get_solved_composites_df(df, request.headers)
     df = utils.get_solved_palindromes_df(df, request.headers)
+    strs_count = df.notna().sum(axis=1)
+    df = utils.get_solved_na_df_2(df, request.headers)
+    df = df.astype('int32')
     df = utils.get_solved_deletions_df(df)
     str_count = len(df.columns)
     df = utils.get_subtracted_df(df)
     df = utils.get_tmrca_df(df, str_count, request.headers)
     df = df.drop(df.index[0])
-    df = df.sort_values(by=['Steps'])
+    df['Used markers'] = strs_count
+    df = df.sort_values(by=['Used markers', 'Steps'], ascending=[False, True])
     limit = int(request.headers['limit'])
     if limit != 0:
         df = df.iloc[:limit]
+    df = df[['Used markers', 'Different markers', 'Steps', 'TMRCA']]
     return Response(df.to_csv(sep=',', index=True, header=True), mimetype=TEXT_CSV)
 
 

@@ -45,9 +45,13 @@ def get_df(data):
     return df
 
 
-def get_solved_na_df(df, headers):
+def get_solved_na_df_1(df):
     notna_columns_of_reference = df.columns[df.iloc[0].notna()].tolist()
     df = df[notna_columns_of_reference]
+    return df
+
+
+def get_solved_na_df_2(df, headers):
     if headers[PROCESS_SAMPLES_WITH_NA] == "True":
         reference_df = df.iloc[:1]
         samples_df = df.iloc[1:]
@@ -63,17 +67,17 @@ def get_solved_duplications_df(df):
         if df[column].dtype == 'object':
             column_splitted = df[column].str.split('-')
             if column in ['DYS385', 'DYS459', 'YCAII', 'CDY', 'DYF395S1', 'DYS413']:
-                df[column + 'a'] = column_splitted.str[0].astype('int64')
-                df[column + 'b'] = column_splitted.str[-1].astype('int64')
+                df[column + 'a'] = column_splitted.str[0]
+                df[column + 'b'] = column_splitted.str[-1]
                 df = df.drop(columns=column, errors='ignore')
             elif column in ['DYS464']:
-                df[column + 'a'] = column_splitted.str[0].astype('int64')
-                df[column + 'b'] = column_splitted.str[1].astype('int64')
-                df[column + 'c'] = column_splitted.str[-2].astype('int64')
-                df[column + 'd'] = column_splitted.str[-1].astype('int64')
+                df[column + 'a'] = column_splitted.str[0]
+                df[column + 'b'] = column_splitted.str[1]
+                df[column + 'c'] = column_splitted.str[-2]
+                df[column + 'd'] = column_splitted.str[-1]
                 df = df.drop(columns=column, errors='ignore')
             else:
-                df[column] = column_splitted.str[-1].astype('int64')
+                df[column] = column_splitted.str[-1]
     return df
 
 
