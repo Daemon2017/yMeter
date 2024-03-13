@@ -34,6 +34,7 @@ YEARS_PER_GENERATION = 'ypg'
 REMOVE_PALINDROMES = 'rp'
 CORRECT_389 = 'corr389'
 PROCESS_SAMPLES_WITH_NA = 'pswn'
+MAX_STEPS = 'ms'
 
 
 def get_df(data):
@@ -129,4 +130,11 @@ def get_tmrca_df(df, str_count, headers):
     ypg = headers[YEARS_PER_GENERATION]
     df['TMRCA'] = round(df['lambda'] / 2 / float(amr) * float(ypg)).astype('int64')
     df = df.drop(columns=['lambda_obs', 'lambda'], errors='ignore')
+    return df
+
+
+def get_limited(df, headers):
+    max_steps = int(headers[MAX_STEPS])
+    if max_steps != 0:
+        df = df.loc[df['Steps'] <= max_steps]
     return df

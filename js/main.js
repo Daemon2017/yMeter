@@ -24,7 +24,7 @@ function measure() {
     xhr.setRequestHeader("rp", document.getElementById("rpID").value);
     xhr.setRequestHeader("corr389", document.getElementById("corrID").value);
     xhr.setRequestHeader("pswn", document.getElementById("pswnID").value);
-    xhr.setRequestHeader("limit", document.getElementById("limitID").value);
+    xhr.setRequestHeader("ms", document.getElementById("msID").value);
     xhr.setRequestHeader("Content-Type", "text/plain");
 
     var body = document.getElementById("referenceID").value + "\n" + document.getElementById("samplesID").value;

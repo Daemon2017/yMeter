@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e0795184-29a8-40a8-af71-0ba3379a02fa",
+		"_postman_id": "42694ee1-9ce7-4913-abc9-ea2e34d3bb30",
 		"name": "yMeter",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -26,7 +26,7 @@
 						"type": "default"
 					},
 					{
-						"key": "limit",
+						"key": "ms",
 						"value": "0",
 						"type": "default"
 					},

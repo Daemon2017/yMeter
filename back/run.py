@@ -29,9 +29,7 @@ def measure():
     df = df.drop(df.index[0])
     df['Used markers'] = strs_count
     df = df.sort_values(by=['Used markers', 'Steps'], ascending=[False, True])
-    limit = int(request.headers['limit'])
-    if limit != 0:
-        df = df.iloc[:limit]
+    df = utils.get_limited(df, request.headers)
     df = df[['Used markers', 'Different markers', 'Steps', 'TMRCA']]
     return Response(df.to_csv(sep=',', index=True, header=True), mimetype=TEXT_CSV)
 
